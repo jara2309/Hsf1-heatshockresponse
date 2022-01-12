@@ -1,0 +1,15 @@
+Step 1: hisat2-build [reference genome].fa [name of output file's] 
+
+Example: hisat2-build GCF_000002985.6_WBcel235_genomic.fa species_index 
+
+Step 2: hisat2_extract_splice_sites.py [gene transfer format file].gtf > [name of output file] 
+
+Example: hisat2_extract_splice_sites.py GCF_000002985.6_WBcel235_genomic.gtf > hisat2_output_ss.txt 
+
+Step 3: hisat2 -x [output step 1] --known-splicesite-infile [name output file from step 2].txt -p 8 -U [name sample/reads file].fq --rna-strandness R | samtools view -o [name output file].bam 
+
+Example: hisat2 -x indexFiles/species  _index --known-splicesite-infile hisat2_output_ss.txt -p 8 -U reads/SRR11068825_trimmed.fq --rna-strandness R | samtools view -o reads25.bam 
+
+Step 4: htseq-count –s reverse [names of all sorted bamfiles] [gene transfer format file].gtf > [name output file].counts 
+
+Example: htseq-count -s reverse sortedReads23.bam sortedReads24.bam sortedReads25.bam sortedReads26.bam sortedReads27.bam sortedReads28.bam GCF_000002985.6_WBcel235_genomic.gtf > reads.counts  
